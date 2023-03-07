@@ -3,22 +3,24 @@
   min-height: 100vh;
   min-width: 100vw;
   background-color: ghostwhite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.App-title {
+  margin-bottom: 10vh;
+  margin-top: 10vh;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-button {
+  margin: 5vh;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-.App-header {
-  min-height: 70vh;
-  min-width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {

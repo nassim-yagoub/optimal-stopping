@@ -1,88 +1,74 @@
-import React, { useState } from 'react';
-import { Button, Card, Container, Divider, Header, Input } from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
-import { calculateOptimalStopping } from './utils';
-import './App.css';
+import React, { useState } from "react";
+import { calculateOptimalStopping } from "./utils";
+import "./App.css";
+import { Button, ChakraProvider, Container, Text } from "@chakra-ui/react";
+import SliderComponent from "./Slider/Slider.component";
 
 const App = () => {
-  const [numberOfTries, setNumberOfTries] = useState(10);
+  const [numberOfTries, setNumberOfTries] = useState(25);
   const [rejection, setRejection] = useState(0);
   const [lookback, setLookback] = useState(0);
 
   const [optimalStopping, setOptimalStopping] = useState(-1);
 
   return (
-    <Container className='App'>
-      <Header className='App-header'>
-        <Header>How long should you keep looking non-commitaly ?</Header>
-        <Divider/>
-        <Card.Group textAlign='center'>
-          <Card>
-            <Card.Content textAlign='center'>
-              <Card.Header>Number of tries</Card.Header>
-              <Card.Description>
-                <Input
-                  type='range'
-                  min={0}
-                  max={100}
-                  step={5}
-                  value={numberOfTries}
-                  // @ts-ignore
-                  onChange={(event) => setNumberOfTries(+event.target.value)}
-                />
-                <p>{numberOfTries}</p>
-              </Card.Description>
-            </Card.Content>
-          </Card>
+    <ChakraProvider>
+      <Container className='App'>
+        <Text className='App-title'>
+          How long should you keep looking non-commitaly ?
+        </Text>
+        <Container>
+          <SliderComponent
+            title='Number of tries'
+            value={numberOfTries}
+            setValue={setNumberOfTries}
+            min={0}
+            max={100}
+            step={1}
+            label={`${Math.trunc(numberOfTries)}`}
+          />
+          <SliderComponent
+            title='Probability of being rejected'
+            value={rejection}
+            setValue={setRejection}
+            min={0}
+            max={1}
+            step={0.01}
+            label={`${Math.trunc(100 * rejection)}%`}
+            percentage
+          />
+          <SliderComponent
+            title='Probability of success after coming back'
+            value={lookback}
+            setValue={setLookback}
+            min={0}
+            max={1}
+            step={0.01}
+            label={`${Math.trunc(100 * lookback)}%`}
+            percentage
+          />
+        </Container>
 
-          <Card>
-            <Card.Content textAlign='center'>
-              <Card.Header>Probability of being rejected</Card.Header>
-              <Card.Description>
-                <Input
-                  type='range'
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  value={rejection}
-                  // @ts-ignore
-                  onChange={(event) => setRejection(+event.target.value)}
-                />
-                <p>{100*rejection}%</p>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-
-          <Card>
-            <Card.Content textAlign='center'>
-              <Card.Header>Probability of success after coming back</Card.Header>
-              <Card.Description>
-                <Input
-                  type='range'
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  value={lookback}
-                  // @ts-ignore
-                  onChange={(event) => setLookback(+event.target.value)}
-                />
-                <p>{100*lookback}%</p>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-        </Card.Group>
-        <Divider/>
-        <Button onClick={() => setOptimalStopping(calculateOptimalStopping({numberOfTries, rejection, lookback}))}>
+        <Button
+          className='App-button'
+          onClick={() =>
+            setOptimalStopping(
+              calculateOptimalStopping({ numberOfTries, rejection, lookback })
+            )
+          }>
           Calculate
         </Button>
-        <Divider/>
-        {optimalStopping !== -1 ? 
-          <p>Result is: {optimalStopping}</p>
-          : <></>
-        }
-      </Header>
-    </Container>
+        {optimalStopping !== -1 ? (
+          <Text>
+            You should commit to the best person after {optimalStopping}{" "}
+            relations
+          </Text>
+        ) : (
+          <></>
+        )}
+      </Container>
+    </ChakraProvider>
   );
-}
+};
 
 export default App;
